@@ -15,7 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import include
 
+from rango import views
+
+'''
+    Maps the basic URL to the index view; maps anything begining with rango to be handled by rango.
+    The added mapping looks for URL strings beginning with rango/.
+        When the match is made, the remainder of the URL string is then passed onto and handled by rango.urls
+        through the use of include().
+'''
 urlpatterns = [
+    path('', views.index, name="index"),
+    path('rango/', include('rango.urls')),
     path('admin/', admin.site.urls),
 ]

@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Define a new app for the rango twd_lab_works
+    "rango"
 ]
 
 MIDDLEWARE = [
