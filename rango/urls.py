@@ -24,4 +24,5 @@ The third parameter, name, is an _optional_ parameter.
 
 urlpatterns = [
 	path('',views.index,name='index'),
+	path('about/', views.about,name="about"),
 ]
