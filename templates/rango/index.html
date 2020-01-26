@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<!--
+	Informs the django template engine that we are using static files
+	within our template.
+		Allows us to access media in static dir via the static template tag.
+		Will combine the URL specified in STATIC_URL
+
+	DOCTYPE is always first otherwise a white space will be added and it will fail validation.
+-->
+{% load staticfiles %}
+
+<html>
+<head>
+	<title>Rango</title>
+</head>
+<body>
+	<h1>Rango says...</h1>
+	<div>
+		
+		<p>Hey there partner!</p><br/>
+		
+		<!-- 
+			Strong is an emphasis tag.
+			{{boldmessage}} is a django template variable.
+				... of which we can dynamically replace the content.
+
+		-->
+		<strong>{{boldmessage}}</strong>
+
+	</div>
+	<div>
+		<a href="/rango/about/">About</a><br/>
+
+		<!-- Add a static image file -->
+		<img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango"/>
+	</div>
+</body>
+</html>
