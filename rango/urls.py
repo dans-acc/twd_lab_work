@@ -20,9 +20,16 @@ The third parameter, name, is an _optional_ parameter.
 	provides a convenient way to reference the view;
 	can employ reverse url matching:
 		we can reference it by name rather than url.
+
+<slug:category_name_slug> is a parameter that is added to URL.
+    Indicates to Django that we want to match a string which is a slug and assign it
+    to variable category_name_slug.
+    The variable names must match that foind in the function.
+        You can match other parameters too, e.g. strings, integers etc.
 '''
 
 urlpatterns = [
 	path('',views.index,name='index'),
 	path('about/', views.about,name="about"),
+	path('category/<slug:category_name_slug>/', views.show_category, name='show_category'),
 ]
