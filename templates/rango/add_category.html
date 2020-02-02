@@ -1,9 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Rango</title>
-</head>
-<body>
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+<!-- Override the title of the page -->
+{% block title_block %}
+	Add a Category
+{% endblock %}
+
+<!-- Override the body of the page -->
+{% block body_block %}
 	<h1>Add a Category</h1>
 	<div>
 		<!--
@@ -17,7 +21,7 @@
 					We add any errors to the field,
 					and help text.
 		-->
-		<form id="category_form" method="post" action="/rango/add_category/">
+		<form id="category_form" method="post" action="{% url 'rango:add_category' %}">
 			{% csrf_token %}
 			{% for hidden in form.hidden_fields %}
 				{{ hidden }}
@@ -30,5 +34,4 @@
 			<input type="submit" name="submit" value="Create Category" />
 		</form>
 	</div>
-</body>
-</html>
+{% endblock %}

@@ -1,31 +1,17 @@
-<!DOCTYPE html>
-
-<!--
-	Informs the django template engine that we are using static files
-	within our template.
-		Allows us to access media in static dir via the static template tag.
-		Will combine the URL specified in STATIC_URL
-
-	DOCTYPE is always first otherwise a white space will be added and it will fail validation.
--->
+{% extends 'rango/base.html' %}
 {% load staticfiles %}
 
-<html>
-<head>
-	<title>Rango</title>
-</head>
-<body>
+<!-- Override the index page title. -->
+{% block title_block %}
+	Homepage
+{% endblock %}
+
+<!-- Override the body of the template. -->
+{% block body_block %}
 	<h1>Rango says...</h1>
 	<div>
-				<!-- 
-			Strong is an emphasis tag.
-			{{boldmessage}} is a django template variable.
-				... of which we can dynamically replace the content.
-
-		-->
 		<p>Hey there partner!</p><br/>
 		<strong>{{boldmessage}}</strong>
-
 	</div>
 	<div>
 		<h2>Most Liked Categories</h2>
@@ -33,7 +19,7 @@
 			<ul>
 				{% for category in categories %}
 					<li>
-						<a href="/rango/category/{{ category.slug }}/">{{ category.name }}</a>
+						<a href="{% url 'rango:show_category' category.slug %}">{{ category.name }}</a>
 					</li>
 				{% endfor %}
 			</ul>
@@ -47,6 +33,7 @@
 			<ul>
 				{% for page in pages %}
 					<li>
+						<!-- A link to the most viewed page. -->
 						<a href="{{ page.url }}">{{ page.title }}</a>
 					</li>
 				{% endfor %}
@@ -56,10 +43,7 @@
 		{% endif %}
 	</div>
 	<div>
-		<a href="/rango/about/">About</a><br />
-		<a href="/rango/add_category/">Add a New Category</a><br />
 		<!-- Add a static image file -->
 		<img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango"/>
 	</div>
-</body>
-</html>
+{% endblock %}
