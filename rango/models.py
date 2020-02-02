@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 
 '''
@@ -45,4 +46,23 @@ class Page(models.Model):
 	views = models.IntegerField(default=0)
 	def __str__(self):
 		return self.title
+
+class UserProfile(models.Model):
+
+	# This line is required as it links UserProfile to a User model instance.
+	# Note that we are referencing the User model defined in: django.contrib.auth.models.
+	# We want to make this association when we register the user.
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+	# The additional attributes we wish to include; blank=True means user does not need to specify.
+	website = models.URLField(blank=True)
+
+	# upload_to is conjoined with the projects MEDIA_ROOT setting to provide a path with which to uploaded profilei images.
+	# ... will be stored e.g. <workspace>/tango_with_django_project/media/profile_images/
+	picture = models.ImageField(upload_to='profile_images', blank=True)
+
+	def __str__(self):
+		return self.user.username
+
+
 

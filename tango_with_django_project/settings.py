@@ -35,6 +35,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Where to redirect the user of they are not logged in.
+LOGIN_URL = 'rango:login'
+
 
 # Application definition
 
