@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 
+from datetime import datetime
+
 '''
 The functions are called from the urls.py inside the rango app.
 '''
@@ -30,6 +32,15 @@ def index(request):
 	context_dict['categories'] = category_list
 	context_dict['pages'] = page_list
 
+
+	visitor_cookie_handler(request)
+	# context_dict['visits'] = int(request.session['visits'])
+
+	'''
+	Set a test cookie
+	request.session.set_test_cookie()
+	'''
+
 	'''
 	Return a rendered response to send to the client.
 	Make use of the shortcut function to make our lives easier.
@@ -37,12 +48,80 @@ def index(request):
 
 	render will take the template and the context_dict and match [mash] it together
 	to produce complete HTML response and returned with HttpResponse.
-
 	'''
-	return render(request, 'rango/index.html', context=context_dict)
+	response = render(request, 'rango/index.html', context=context_dict)
+	return response
+
+# Server side cookie helper function.
+def get_server_side_cookie(request, cookie, default_val=None):
+	val = request.session.get(cookie)
+	if not val:
+		val = default_val
+	return val
+
+def visitor_cookie_handler(request):
+
+	# Get the number of visits to the site.
+	# We use COOKIES.get() to obtain the visits cookie.
+	# If it exists, cast to integer, otherwise default to 1.
+	visits = int(get_server_side_cookie(request, 'visits', '1'))
+
+	last_visit_cookie = get_server_side_cookie(request, 'last_visit', str(datetime.now()))
+	last_visit_time = datetime.strptime(last_visit_cookie[:-7], '%Y-%m-%d %H:%M:%S')
+
+	# If it's been more than a day since the last visit...
+	if (datetime.now() - last_visit_time).days > 0:
+		visits = visits + 1
+
+		# Update the last visit cookie now that we have updated the count.
+		request.session['last_visit'] = str(datetime.now())
+	else:
+
+		# Set the last visit cookie.
+		request.session['last_visit'] = last_visit_cookie
+
+	# Update/set the visits cookie.
+	request.session['visits'] = visits
+
+'''
+def visitor_cookie_handler(request, response):
+
+	# Get the number of visits to the site.
+	# We use COOKIES.get() to obtain the visits cookie.
+	# If it exists, cast to integer, otherwise default to 1.
+	visits = int(request.COOKIES.get('visits', '1'))
+
+	last_visit_cookie = request.COOKIES.get('last_visit', str(datetime.now()))
+	last_visit_time = datetime.strptime(last_visit_cookie[:-7], '%Y-%m-%d %H:%M:%S')
+
+	# If it's been more than a day since the last visit...
+	if (datetime.now() - last_visit_time).days > 0:
+		visits = visits + 1
+
+		# Update the last visit cookie now that we have updated the count.
+		response.set_cookie('last_visit', str(datetime.now()))
+	else:
+
+		# Set the last visit cookie.
+		response.set_cookie('last_visit', last_visit_cookie)
+
+	# Update/set the visits cookie.
+	response.set_cookie('visits', visits)
+'''
+
 
 def about(request):
-	context_dict = {'boldmessage':'Dans - 2500414V'}
+
+	'''
+	# Check for the test cookie and then delete it.
+	if request.session.test_cookie_worked():
+		print('TEST COOKIE WORKED')
+		request.session.delete_test_cookie()
+	'''
+
+	visitor_cookie_handler(request)
+
+	context_dict = {'boldmessage':'Dans - 2500414V', 'visits': int(request.session['visits'])}
 	return render(request, 'rango/about.html',context=context_dict)
 
 def show_category(request, category_name_slug):
